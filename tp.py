@@ -1,7 +1,8 @@
-def chiffrement_vigenere(texte_clair : str, clef : str) -> str:
-    # le chiffrement ne doit fonctionner que si la clef et le texte clair sont composés uniquement de lettres 
+def chiffrement_vigenere_complet(texte_clair : str, clef : str) -> str:
+    # Version améliorée du chiffrement de Vigenère
+    # Le chiffrement ne doit fonctionner que si la clef et le texte clair sont composés uniquement de lettres 
     # (majuscules, minuscules ou combinaisons des deux)
-    #les espaces, signes de ponctuations et caractères spéciaux sont aussi pris en compte dans le texte clair mais ne sont pas chiffrés
+    #les espaces, signes de ponctuations et caractères spéciaux sont aussi pris en compte dans le texte clair et sont chiffrés
     #la clef est répétée autant de fois que nécessaire pour chiffrer tout le texte clair
     #le chiffrement n'est pas sensible à la casse (on peut chiffrer avec une clef en majuscules, minuscules ou combinaison des deux)
     #le résultat doit être en majuscules
@@ -28,13 +29,15 @@ def chiffrement_vigenere(texte_clair : str, clef : str) -> str:
             texte_chiffre += chr(chiff_val + ord('A'))
             index_clef += 1
         else:
-            # Si le caractère n'est pas une lettre, on l'ajoute tel quel au texte chiffré
-            texte_chiffre += caractere
+            # Si le caractère n'est pas une lettre, on le chiffre aussi en utilisant la clef
+            caractere_clef = clef[index_clef % longueur_clef].upper()
+            c_val = ord(caractere) % 256  # Utilise la valeur ASCII complète pour les caractères non alphabétiques
+            k_val = ord(caractere_clef) - ord('A')
+            chiff_val = (c_val + k_val) % 256
+            texte_chiffre += chr(chiff_val)
+            index_clef += 1
         index_texte += 1
-    
     return texte_chiffre
-
-                
 
 
 if __name__ == "__main__" :
@@ -43,7 +46,7 @@ if __name__ == "__main__" :
     texte_chiffre : str
     texte_clair = input(str("Entrez le texte à chiffrer : "))
     clef = input(str("Entrez la clef de chiffrement : "))
-    texte_chiffre = chiffrement_vigenere(texte_clair, clef)
+    texte_chiffre = chiffrement_vigenere_complet(texte_clair, clef)
     print("Le texte chiffré est : ", texte_chiffre)
 
     
