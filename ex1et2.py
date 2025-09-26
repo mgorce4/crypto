@@ -1,91 +1,69 @@
-def chiffrement_vigenere_complet(texte_clair : str, clef : str) -> str:
-    # Version améliorée du chiffrement de Vigenère
-    # Le chiffrement ne doit fonctionner que si la clef et le texte clair sont composés uniquement de lettres 
-    # (majuscules, minuscules ou combinaisons des deux)
-    #les espaces, signes de ponctuations et caractères spéciaux sont aussi pris en compte dans le texte clair et sont chiffrés
-    #la clef est répétée autant de fois que nécessaire pour chiffrer tout le texte clair
-    #le chiffrement n'est pas sensible à la casse (on peut chiffrer avec une clef en majuscules, minuscules ou combinaison des deux)
-    #le résultat doit être en majuscules
-    texte_chiffre : str
-    texte_chiffre = ""
-    longueur_clef : int
-    longueur_clef = len(clef)
-    index_clef : int
-    index_clef = 0
-    index_texte : int
-    index_texte = 0
-    caractere_clef : str
-    caractere : str
+# Alphabet étendu : lettres (majuscules/minuscules), accents, chiffres, ponctuation
+ALPHABET = (
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    "abcdefghijklmnopqrstuvwxyz"
+    "ÀÂÄÇÉÈÊËÎÏÔÖÙÛÜàâäçéèêëîïôöùûü"
+    "0123456789"
+    " .,;:!?()[]{}+-*/=<>_\"'&%$#@^~|\\"
+)
 
-    for caractere in texte_clair :
-        if caractere.isalpha():
-            #Prend le caractère de la clef en fonction de l'index
-            caractere_clef = clef[index_clef % longueur_clef].upper()
-            # Convertit les deux caractères en majuscules et calcule leur position dans l'alphabet {0,25}
-            c_val = ord(caractere.upper()) - ord('A')
-            k_val = ord(caractere_clef) - ord('A')
-            # Applique la formule de chiffrement de Vigenère
-            chiff_val = (c_val + k_val) % 26
-            texte_chiffre += chr(chiff_val + ord('A'))
-            index_clef += 1
+def get_k_val(caractere_clef: str) -> int:
+    """Décalage de la clé en fonction de l'alphabet étendu"""
+    if caractere_clef in ALPHABET:
+        return ALPHABET.index(caractere_clef)
+    else:
+        # Si le caractère n’est pas dans l’alphabet → on prend son code Unicode mod taille alphabet
+        return ord(caractere_clef) % len(ALPHABET)
+
+
+def chiffrement_vigenere_complet(texte_clair: str, clef: str) -> str:
+    texte_chiffre = ""
+    longueur_clef = len(clef)
+    index_clef = 0
+    n = len(ALPHABET)
+
+    for caractere in texte_clair:
+        k_val = get_k_val(clef[index_clef % longueur_clef])
+
+        if caractere in ALPHABET:
+            c_val = ALPHABET.index(caractere)
+            chiff_val = (c_val + k_val) % n
+            texte_chiffre += ALPHABET[chiff_val]
         else:
-            # Si le caractère n'est pas une lettre, on le chiffre aussi en utilisant la clef
-            caractere_clef = clef[index_clef % longueur_clef].upper()
-            c_val = ord(caractere) % 256  # Utilise la valeur ASCII complète pour les caractères non alphabétiques
-            k_val = ord(caractere_clef) - ord('A')
-            chiff_val = (c_val + k_val) % 256
-            texte_chiffre += chr(chiff_val)
-            index_clef += 1
-        index_texte += 1
+            # Si caractère inconnu → inchangé
+            texte_chiffre += caractere
+
+        index_clef += 1
+
     return texte_chiffre
 
 
-
-def dechiffrement_vigenere_complet(texte_chiffre : str, clef : str) -> str:
-    # Déchiffrement de Vigenère
-    texte_clair : str
+def dechiffrement_vigenere_complet(texte_chiffre: str, clef: str) -> str:
     texte_clair = ""
-    longueur_clef : int
     longueur_clef = len(clef)
-    index_clef : int
     index_clef = 0
-    index_texte : int
-    index_texte = 0
-    caractere_clef : str
-    caractere : str
-    for caractere in texte_chiffre :
-        if caractere.isalpha():
-            #Prend le caractère de la clef en fonction de l'index
-            caractere_clef = clef[index_clef % longueur_clef].upper()
-            # Convertit les deux caractères en majuscules et calcule leur position dans l'alphabet {0,25}
-            c_val = ord(caractere.upper()) - ord('A')
-            k_val = ord(caractere_clef) - ord('A')
-            # Applique la formule de déchiffrement de Vigenère
-            dechiff_val = (c_val - k_val + 26) % 26
-            texte_clair += chr(dechiff_val + ord('A'))
-            index_clef += 1
+    n = len(ALPHABET)
+
+    for caractere in texte_chiffre:
+        k_val = get_k_val(clef[index_clef % longueur_clef])
+
+        if caractere in ALPHABET:
+            c_val = ALPHABET.index(caractere)
+            dechiff_val = (c_val - k_val + n) % n
+            texte_clair += ALPHABET[dechiff_val]
         else:
-            # Si le caractère n'est pas une lettre, on le déchiffre aussi en utilisant la clef
-            caractere_clef = clef[index_clef % longueur_clef].upper()
-            c_val = ord(caractere) % 256  # Utilise la valeur ASCII complète pour les caractères non alphabétiques
-            k_val = ord(caractere_clef) - ord('A')
-            dechiff_val = (c_val - k_val + 256) % 256
-            texte_clair += chr(dechiff_val)
-            index_clef += 1
-        index_texte += 1
+            texte_clair += caractere
+
+        index_clef += 1
+
     return texte_clair
 
 
-if __name__ == "__main__" :
-    texte_clair : str
-    clef : str
-    texte_chiffre : str
-    texte_dechiffre : str
-    texte_clair = input(str("Entrez le texte à chiffrer : "))
-    clef = input(str("Entrez la clef de chiffrement : "))
+
+if __name__ == "__main__":
+    texte_clair = input("Entrez le texte à chiffrer : ")
+    clef = input("Entrez la clef de chiffrement : ")
     texte_chiffre = chiffrement_vigenere_complet(texte_clair, clef)
     print("Le texte chiffré est : ", texte_chiffre)
     texte_dechiffre = dechiffrement_vigenere_complet(texte_chiffre, clef)
     print("Le texte déchiffré est : ", texte_dechiffre)
-
-    
