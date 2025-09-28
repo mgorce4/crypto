@@ -213,65 +213,19 @@ def vigenere_decrypt(ciphertext: str, key: str, preserve_nonletters=True) -> str
     return ''.join(out)
 
 
-# --- Petits jeux d'essais pour vérification ---
-
-TESTS = [
-    {
-        'plaintext': "Attack at dawn! Rendez-vous à l'aube.",
-        'key': 'LEMON',
-        'expected_keylen': 5
-    },
-    {
-        'plaintext': "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        'key': 'KEY',
-        'expected_keylen': 3
-    },
-    {
-        'plaintext': "Ceci est un texte assez long pour créer quelques répétitions. Ceci est un texte assez long.",
-        'key': 'ABCD',
-        'expected_keylen': 4
-    },
-]
-
-
-def run_tests():
-    print('=== Jeux d\'essais pour kasiski_key_length ===')
-    for i, t in enumerate(TESTS, 1):
-        p = t['plaintext']
-        key = t['key']
-        c = vigenere_encrypt(p, key, preserve_nonletters=True)
-        candidates = kasiski_key_length(c, min_len=3, max_len=16)
-        ok = t['expected_keylen'] in candidates
-        print(f"Test {i}: clé attendue={t['expected_keylen']}, candidats={candidates}, OK={ok}")
-        if not ok:
-            print('\n== Détaillé ==')
-            print('Plaintext:', p)
-            print('Clé:', key)
-            print('Chiffré (extrait):', c[:200])
-            print('\n')
-    print('=== Fin des tests ===')
-
-
 # --- CLI ---
 
 def main():
     ap = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
                                  description=textwrap.dedent('''
                                  Kasiski pour Vigenere
-
-                                 Exemples:
-                                   python kasiski_vigenere.py --kasiski message_chiffre.txt
-                                   python kasiski_vigenere.py --test
                                  '''))
     ap.add_argument('--kasiski', help='fichier contenant le texte chiffré (utf-8)')
     ap.add_argument('--min', type=int, default=3, help='longueur min des fragments (defaut 3)')
     ap.add_argument('--max', type=int, default=16, help='longueur max des fragments (defaut 16)')
-    ap.add_argument('--test', action='store_true', help='lance les jeux d\'essais')
     args = ap.parse_args()
 
-    if args.test:
-        run_tests()
-        return
+    
 
     if args.kasiski:
         try:
