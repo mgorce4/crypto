@@ -2,11 +2,13 @@ test kasiski 1
 plaintext avant chiffrement : CATSARECUTEANDILOVETHEMALOTTHEYARETHEBESTBABIESEVERANDICANNOTLIVEWITHOUTTHEM
 plaintext après chiffrement : ELXXCCIHWEIFPOMQQGIYJPQFNZXYJPCFTPXMGMIXVMEGKPWJXPVFPOMHCYRTVWMAGHMYJZYYVSIR
 clef : CLEF 
+méthode de chiffrement : vigenere simple (majuscules seulement)
 réponse attendue : 4
 réponse obtenue : Candidats pour la taille de la clé: [2, 4, 8]
 test kasiski 2
 plaintext avant chiffrement : le corbeau d'edgard allan poe 
 plaintext après chiffrement : cf test2.txt
+méthode de chiffrement : vigenere complet (majuscules et minuscules, espaces, ponctuation, caractères spéciaux et chiffres)
 clef : corbeau
 réponse attendue : 7
 réponse obtenue : Candidats pour la taille de la clé: [317]
@@ -14,5 +16,6 @@ test kasiski 3
 plaintext avant chiffrement :MAITRECORBEAUSURSONARBREPRECHETENAITENSONBECUNFROMAGEMAITRERENARDPARLODEURALLECHELUITINTAPEUPRESCELANGAGEETBONJOURMONSIEURDUCORBEAUQUEVOUSETESJOLIQUEVOUSMESEMBLEZBEAUSANSMENTIRSIVOTRERAMAGESERAPPORTEAVOTREPLUMAGEVOUSETESLEPHENIXDESHOTESDECESBOISACESMOTSLECORBEAUNESESENTPASDEJOIEETPOURMONTRERSABELLEVOIXILOUVREUNLARGEBECLAISSETOMBERSAPROIELERENARDSENSAISITETDITMONBONMONSIEURAPPRENEZQUETOUTFLATTEURVITAUXDEPENSDECELUIQUILECOUTECETTELECONVAUTBIENUNFROMAGESANSDOUTELECORBEAUHONTEUXETCONFUSJURAMAISUNPEUTARDQUONNELYPRENDRAITPLUS
 plaintext après chiffrement : cf test3.txt
 clef : FROMAGE
+méthode de chiffrement : vigenere simple (majuscules seulement)
 réponse attendue : 7
 réponse obtenue : Candidats pour la taille de la clé: [7]
