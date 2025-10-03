@@ -1,17 +1,11 @@
 """
-kasiski_vigenere.py
-
-Implémentation de l'exercice 3 (R3.09) — méthode de Kasiski pour estimer la longueur de la clé
-pour un texte chiffré par Vigenère.
-
 Usage (ligne de commande) :
   python kasiski_vigenere.py --kasiski <fichier_chiffre>
   python kasiski_vigenere.py --test      # lance les jeux d'essais inclus
 
-Fonctions disponibles dans ce fichier :
- - vigenere_encrypt(plaintext, key, preserve_nonletters=True)
- - vigenere_decrypt(ciphertext, key, preserve_nonletters=True)
+Fonction disponible dans ce fichier :
  - kasiski_key_length(ciphertext, min_len=3, max_len=16)
+ - 
 
 Décisions de traitement (à justifier dans le rapport) :
  - Pour Kasiski on travaille sur une version filtrée du texte : on ne conserve que les lettres
@@ -24,10 +18,6 @@ Décisions de traitement (à justifier dans le rapport) :
  - Les candidats initiaux pour la taille de la clé sont les diviseurs (>1) de la première distance
    rencontrée (première ligne du tableau repet).
  - On applique l'algorithme décrit (PGCD itératif entre candidats et distance), en éliminant 1.
-
-Livrables pratiques :
- - Ce script contient aussi un petit jeu d'essais (--test) qui chiffre des textes de tests avec
-   une clé donnée, puis exécute Kasiski et affiche le résultat attendu vs. le résultat obtenu.
 
 Sortie de kasiski_key_length:
  - retourne une liste d'entiers possibles pour la longueur de la clé, ou une liste vide si aucune
@@ -83,7 +73,6 @@ def find_repetitions(cipher_filtered: str, min_len=3, max_len=None):
         for frag, poslist in table.items():
             if len(poslist) >= 2:
                 found.append((frag, poslist, L))
-    # Tri facultatif: déjà par L décroissant
     return found
 
 
@@ -105,10 +94,9 @@ def kasiski_key_length(ciphertext: str, min_len=3, max_len=16):
     if not repet:
         return []
 
-    # Construire la table repet demandée : pour chaque fragment on prend distances entre occurrences
     repet_table = []  # list of (frag, distance)
     for frag, poslist, L in repet:
-        # calculer distances successives (ou toutes les paires ? on prend successives pour suivre la spec)
+        # calculer distances successives entre positions
         for i in range(1, len(poslist)):
             distance = poslist[i] - poslist[i-1]
             if distance > 0:
@@ -140,80 +128,12 @@ def kasiski_key_length(ciphertext: str, min_len=3, max_len=16):
         if temp:
             candidats = temp
         else:
-            # si temp vide : garder candidats tels quels et continuer (voir 6.d.i)
+            # si temp vide : garder candidats tels quels et continuer 
             continue
 
     # À la fin, retourner candidats (éventuellement vides)
     return sorted(set(candidats))
 
-
-# --- Vigenere pour tests et vérification ---
-
-ALPH = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-
-
-def vigenere_encrypt(plaintext: str, key: str, preserve_nonletters=True) -> str:
-    """
-    Chiffre le texte avec Vigenère.
-    Si preserve_nonletters est True, on laisse les caractères non-lettres inchangés
-    (mais la progression de la clé n'avance que sur les lettres). Sinon on enlève
-    non-lettres et chiffre la suite compacte.
-
-    On préserve la casse : majuscules/chiffrement sur majuscules, minuscules idem.
-    """
-    out = []
-    key_indices = [ALPH.index(ch.upper()) for ch in key if ch.isalpha()]
-    if not key_indices:
-        raise ValueError('La clé doit contenir au moins une lettre')
-    k = 0
-    for ch in plaintext:
-        if ch.isalpha():
-            ki = key_indices[k % len(key_indices)]
-            if ch.isupper():
-                base = 'A'
-                ci = (ord(ch) - ord(base) + ki) % 26
-                out.append(chr(ci + ord(base)))
-            else:
-                base = 'a'
-                ci = (ord(ch) - ord(base) + ki) % 26
-                out.append(chr(ci + ord(base)))
-            k += 1
-        else:
-            if preserve_nonletters:
-                out.append(ch)
-            else:
-                # skip non-letters entirely
-                pass
-    return ''.join(out)
-
-
-def vigenere_decrypt(ciphertext: str, key: str, preserve_nonletters=True) -> str:
-    out = []
-    key_indices = [ALPH.index(ch.upper()) for ch in key if ch.isalpha()]
-    if not key_indices:
-        raise ValueError('La clé doit contenir au moins une lettre')
-    k = 0
-    for ch in ciphertext:
-        if ch.isalpha():
-            ki = key_indices[k % len(key_indices)]
-            if ch.isupper():
-                base = 'A'
-                pi = (ord(ch) - ord(base) - ki) % 26
-                out.append(chr(pi + ord(base)))
-            else:
-                base = 'a'
-                pi = (ord(ch) - ord(base) - ki) % 26
-                out.append(chr(pi + ord(base)))
-            k += 1
-        else:
-            if preserve_nonletters:
-                out.append(ch)
-            else:
-                pass
-    return ''.join(out)
-
-
-# --- CLI ---
 
 def main():
     ap = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
