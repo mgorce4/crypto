@@ -18,6 +18,7 @@ def get_k_val(caractere_clef: str) -> int:
 
 
 def chiffrement_vigenere_complet(texte_clair: str, clef: str) -> str:
+    """Chiffrement de Vigenère avec alphabet étendu """
     texte_chiffre = ""
     longueur_clef = len(clef)
     index_clef = 0
@@ -84,7 +85,7 @@ def dechiffrement_vigenere_simple_en_majuscules(texte_chiffre: str, clef: str) -
     n = 26  # Nombre de lettres dans l'alphabet français (A-Z)
 
     for caractere in texte_chiffre:
-        if caractere.isalpha():  # Vérifie si le caractère est une lettre
+        if caractere.isalpha(): 
             k_val = ord(clef[index_clef % longueur_clef].upper()) - ord('A')
             c_val = ord(caractere.upper()) - ord('A')
             dechiff_val = (c_val - k_val + n) % n
@@ -95,15 +96,37 @@ def dechiffrement_vigenere_simple_en_majuscules(texte_chiffre: str, clef: str) -
 
     return texte_clair
 
+def menu():
+    print("Menu :")
+    print("1. Chiffrement de Vigenère avec alphabet étendu")
+    print("2. Chiffrement de Vigenère simple en majuscules")
+    print("3. Quitter")
+
 if __name__ == "__main__":
     texte_clair : str
     clef : str
     texte_chiffre : str
     texte_dechiffre : str
-
-    texte_clair = input("Entrez le texte à chiffrer : ")
-    clef = input("Entrez la clef de chiffrement : ")
-    texte_chiffre = chiffrement_de_vigenere_simple_en_majuscules(texte_clair, clef)
-    print("Le texte chiffré est : ", texte_chiffre)
-    texte_dechiffre = dechiffrement_vigenere_simple_en_majuscules(texte_chiffre, clef)
-    print("Le texte déchiffré est : ", texte_dechiffre)
+    choix_menu : int 
+    choix_menu = 0
+    
+    while choix_menu != 3:
+        menu()
+        choix_menu = int(input("Entrez votre choix (1-3) : "))
+        if choix_menu == 1:
+            texte_clair = input("Entrez le texte à chiffrer : ")
+            clef = input("Entrez la clef de chiffrement : ")
+            texte_chiffre = chiffrement_vigenere_complet(texte_clair, clef)
+            print("Le texte chiffré est : ", texte_chiffre)
+            texte_dechiffre = dechiffrement_vigenere_complet(texte_chiffre, clef)
+            print("Le texte déchiffré est : ", texte_dechiffre)
+        elif choix_menu == 2:
+            texte_clair = input("Entrez le texte à chiffrer : ")
+            clef = input("Entrez la clef de chiffrement : ")
+            texte_chiffre = chiffrement_de_vigenere_simple_en_majuscules(texte_clair, clef)
+            print("Le texte chiffré est : ", texte_chiffre)
+            texte_dechiffre = dechiffrement_vigenere_simple_en_majuscules(texte_chiffre, clef)
+            print("Le texte déchiffré est : ", texte_dechiffre)
+        elif choix_menu == 3:
+            print("Au revoir!")
+            

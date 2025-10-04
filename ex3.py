@@ -5,9 +5,8 @@ Usage (ligne de commande) :
 
 Fonction disponible dans ce fichier :
  - kasiski_key_length(ciphertext, min_len=3, max_len=16)
- - 
 
-Décisions de traitement (à justifier dans le rapport) :
+Décisions de traitement :
  - Pour Kasiski on travaille sur une version filtrée du texte : on ne conserve que les lettres
    A-Za-z (on passe tout en majuscules) car les répétitions utiles pour Kasiski portent sur la
    séquence de lettres. Les espaces/ponctuation sont ignorés pour la recherche des répétitions.
