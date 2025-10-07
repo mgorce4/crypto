@@ -65,7 +65,6 @@ def chiffrement_de_vigenere_simple_en_majuscules(texte_clair: str, clef: str) ->
     longueur_clef = len(clef)
     index_clef = 0
     n = 26  # Nombre de lettres dans l'alphabet français (A-Z)
-
     for caractere in texte_clair:
         if caractere.isalpha():  # Vérifie si le caractère est une lettre
             k_val = ord(clef[index_clef % longueur_clef].upper()) - ord('A')
@@ -75,7 +74,6 @@ def chiffrement_de_vigenere_simple_en_majuscules(texte_clair: str, clef: str) ->
             index_clef += 1
         else:
             texte_chiffre += caractere  
-
     return texte_chiffre
 
 def dechiffrement_vigenere_simple_en_majuscules(texte_chiffre: str, clef: str) -> str:
@@ -83,7 +81,6 @@ def dechiffrement_vigenere_simple_en_majuscules(texte_chiffre: str, clef: str) -
     longueur_clef = len(clef)
     index_clef = 0
     n = 26  # Nombre de lettres dans l'alphabet français (A-Z)
-
     for caractere in texte_chiffre:
         if caractere.isalpha(): 
             k_val = ord(clef[index_clef % longueur_clef].upper()) - ord('A')
@@ -93,7 +90,6 @@ def dechiffrement_vigenere_simple_en_majuscules(texte_chiffre: str, clef: str) -
             index_clef += 1
         else:
             texte_clair += caractere  
-
     return texte_clair
 
 def menu():

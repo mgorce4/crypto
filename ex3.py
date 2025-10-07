@@ -88,11 +88,9 @@ def kasiski_key_length(ciphertext: str, min_len=3, max_len=16):
     filtered = only_letters_upper(ciphertext)
     if len(filtered) < min_len * 2:
         return []
-
     repet = find_repetitions(filtered, min_len=min_len, max_len=max_len)
     if not repet:
         return []
-
     repet_table = []  # list of (frag, distance)
     for frag, poslist, L in repet:
         # calculer distances successives entre positions
@@ -100,22 +98,17 @@ def kasiski_key_length(ciphertext: str, min_len=3, max_len=16):
             distance = poslist[i] - poslist[i-1]
             if distance > 0:
                 repet_table.append((frag, distance, L, poslist[0], poslist[i]))
-
     # trier le tableau par taille du fragment (déjà ordre desc) puis par distance (optionnel)
     repet_table.sort(key=lambda x: (-x[2], x[1]))
-
     # Si vide -> échec
     if not repet_table:
         return []
-
     # Étape 5 : candidats = diviseurs(distance de la première ligne)
     first_distance = repet_table[0][1]
     candidats = divisors(first_distance)
-
     # si aucun diviseur (improbable avec >1), pas d'hypothèse
     if not candidats:
         return []
-
     # Étape 6 : parcourir le tableau ligne par ligne
     for (frag, distance, L, p1, p2) in repet_table[1:]:
         temp = []
@@ -129,7 +122,6 @@ def kasiski_key_length(ciphertext: str, min_len=3, max_len=16):
         else:
             # si temp vide : garder candidats tels quels et continuer 
             continue
-
     # À la fin, retourner candidats (éventuellement vides)
     return sorted(set(candidats))
 
